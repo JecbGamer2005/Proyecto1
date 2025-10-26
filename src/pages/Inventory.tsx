@@ -136,6 +136,7 @@ const Inventory: React.FC = () => {
         <ProductForm
           categories={categories}
           brands={brands}
+          productTypes={productTypes}
           onSubmit={handleAddSubmit}
           onCancel={handleFormCancel}
         />
@@ -147,49 +148,37 @@ const Inventory: React.FC = () => {
           initialProduct={getProductById(editProductId)}
           categories={categories}
           brands={brands}
+          productTypes={productTypes}
           onSubmit={handleEditSubmit}
           onCancel={handleFormCancel}
         />
       )}
       
       {/* Transaction Form */}
-      {showTransactionForm && hasPermission('add') && (
-        <MultiTransactionForm
+      {transactionProductId && (
+        <TransactionForm
           products={products}
+          initialProductId={transactionProductId}
           onSubmit={handleTransactionSubmit}
           onCancel={handleFormCancel}
         />
       )}
       
-      {/* Content based on active tab */}
-      {!showAddForm && !editProductId && !showTransactionForm && (
-        <>
-          {activeTab === 'products' && (
-            <ProductList
-              products={products}
-              categories={categories}
-              brands={brands}
-              getCategoryById={getCategoryById}
-              getBrandById={getBrandById}
-              onEdit={handleEditClick}
-              onDelete={handleDeleteClick}
-              onView={handleViewClick}
-              onAddTransaction={() => {
-                setActiveTab('transactions');
-                setShowTransactionForm(true);
-              }}
-            />
-          )}
-          
-          {activeTab === 'transactions' && (
-            <TransactionList
-              transactions={multiTransactions}
-              products={products}
-              getProductById={getProductById}
-              onDelete={hasPermission('delete') ? deleteMultiTransaction : async () => {}}
-            />
-          )}
-        </>
+      {/* Product List */}
+      {!showAddForm && !editProductId && !transactionProductId && (
+        <ProductList
+          products={products}
+          categories={categories}
+          brands={brands}
+          productTypes={productTypes}
+          getCategoryById={getCategoryById}
+          getBrandById={getBrandById}
+          getProductTypeById={getProductTypeById}
+          onEdit={handleEditClick}
+          onDelete={handleDeleteClick}
+          onView={handleViewClick}
+          onAddTransaction={handleAddTransaction}
+        />
       )}
     </div>
   );

@@ -20,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Inventario', path: '/inventory', icon: <Package size={20} /> },
+    { name: 'Transacciones', path: '/transactions', icon: <ClipboardList size={20} /> },
     { name: 'Configuración', path: '/settings', icon: <Settings size={20} /> },
   ];
   

@@ -37,7 +37,6 @@ export interface TransactionItem {
   productId: string;
   quantity: number;
   unitPrice: number;
-  purchasePrice?: number;
   totalPrice: number;
 }
 

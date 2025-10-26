@@ -24,7 +24,9 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, isOnline }) => {
       case '/':
         return 'Dashboard';
       case '/inventory':
-        return 'Gestión de Inventario';
+        return 'Inventario';
+      case '/transactions':
+        return 'Transacciones';
       case '/settings':
         return 'Configuración';
       default:
@@ -81,7 +83,6 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, isOnline }) => {
               to="/" 
               className="relative p-2 rounded-full hover:bg-blue-500 transition-colors"
               title={`Usuario: ${currentUser?.displayName} (${currentUser?.role})`}
-            >
               <Bell size={20} />
               {totalAlerts > 0 && (
                 <span className="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -111,6 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, isOnline }) => {
         </div>
       </div>
     </nav>
+  )
   );
 };
 

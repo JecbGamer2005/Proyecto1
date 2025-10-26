@@ -61,28 +61,15 @@ const UserManual: React.FC = () => {
 
         {/* Gestión de Productos */}
         <section>
-          <h4 className="text-xl font-semibold text-gray-800 mb-3">Gestión de Inventario</h4>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Gestión de Productos</h4>
           <div className="space-y-4">
             <div>
               <h5 className="font-medium text-gray-800 mb-2">Añadir Nuevo Producto</h5>
               <ol className="list-decimal list-inside space-y-2 text-gray-600">
-                <li>Ve a "Gestión de Inventario" y selecciona la pestaña "Productos"</li>
-                <li>Haz clic en "Agregar Producto"</li>
+                <li>Haz clic en "Agregar Producto" en la sección de Inventario</li>
                 <li>Completa todos los campos requeridos (nombre, descripción, precio, etc.)</li>
                 <li>Establece el nivel mínimo de stock para recibir alertas</li>
                 <li>Guarda el producto</li>
-              </ol>
-            </div>
-            
-            <div>
-              <h5 className="font-medium text-gray-800 mb-2">Realizar Transacciones</h5>
-              <ol className="list-decimal list-inside space-y-2 text-gray-600">
-                <li>Ve a "Gestión de Inventario" y selecciona la pestaña "Transacciones"</li>
-                <li>Haz clic en "Nueva Transacción"</li>
-                <li>Selecciona el tipo (Entrada o Salida)</li>
-                <li>Agrega los productos y cantidades</li>
-                <li>Ajusta precios si es necesario</li>
-                <li>Confirma la transacción</li>
               </ol>
             </div>
             

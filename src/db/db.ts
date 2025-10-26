@@ -69,7 +69,7 @@ class InventoryDatabase extends Dexie {
     await this.transactions.bulkAdd(
       initialTransactions.map(transaction => ({
         ...transaction,
-        transactionNumber: `T-${String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')}`,
+        transactionNumber: `TXN-${Date.now()}-${String(Math.floor(Math.random() * 1000) + 1).padStart(3, '0')}`,
         unitPrice: 0,
         totalPrice: 0,
         syncStatus: SyncStatus.Synced
@@ -160,31 +160,14 @@ class InventoryDatabase extends Dexie {
         
         const updateData: Partial<Product> = { currentStock: newStock };
         
-        // Update prices if they changed (for both entry and exit transactions)
-        if (transaction.type === 'entry' || transaction.type === 'exit') {
+        // If it's an entry transaction, update prices if they changed
+        if (transaction.type === 'entry') {
           const purchasePrice = item.unitPrice;
-          let sellingPrice = item.unitPrice;
+          const sellingPrice = purchasePrice * 1.3; // 30% markup by default
           
-          // For entry transactions, calculate selling price with markup
-          if (transaction.type === 'entry') {
-            sellingPrice = purchasePrice * 1.3; // 30% markup by default
-          }
-          
-          // For exit transactions, use the provided prices
-          if (transaction.type === 'exit' && item.purchasePrice !== undefined) {
-            updateData.purchasePrice = item.purchasePrice;
-            updateData.sellingPrice = item.unitPrice; // unitPrice is the selling price for exits
-          } else if (transaction.type === 'entry') {
+          if (purchasePrice !== product.purchasePrice) {
             updateData.purchasePrice = purchasePrice;
             updateData.sellingPrice = sellingPrice;
-          }
-          
-          // Only update if prices actually changed
-          if (transaction.type === 'entry' && purchasePrice !== product.purchasePrice) {
-            // Already set above
-          } else if (transaction.type === 'exit' && item.purchasePrice !== undefined && 
-                    (item.purchasePrice !== product.purchasePrice || item.unitPrice !== product.sellingPrice)) {
-            // Already set above
           }
         }
         

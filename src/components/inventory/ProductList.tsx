@@ -349,7 +349,7 @@ const ProductList: React.FC<ProductListProps> = ({
                       )}
                       
                       <button
-                        onClick={onAddTransaction}
+                        onClick={() => onAddTransaction(product.id)}
                         className="ml-1 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
                       >
                         Transacción
