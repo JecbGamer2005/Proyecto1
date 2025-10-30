@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MultiTransaction, Product } from '../../types';
-import { Search, ArrowDownCircle, ArrowUpCircle, Calendar, RefreshCw, Trash2, User, Hash } from 'lucide-react';
+import { Search, ArrowDownCircle, ArrowUpCircle, Calendar, RefreshCw, Trash2, User, Hash, Edit2 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -9,13 +9,15 @@ interface TransactionListProps {
   products: Product[];
   getProductById: (id: string) => Product | undefined;
   onDelete: (id: string) => Promise<void>;
+  onEdit: (transaction: MultiTransaction) => void;
 }
 
 const TransactionList: React.FC<TransactionListProps> = ({
   transactions,
   products,
   getProductById,
-  onDelete
+  onDelete,
+  onEdit
 }) => {
   const { formatCurrency } = useSettings();
   const { hasPermission } = useAuth();
@@ -270,15 +272,26 @@ const TransactionList: React.FC<TransactionListProps> = ({
                       {formatCurrency(transaction.totalAmount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {hasPermission('delete') && (
-                        <button
-                          onClick={() => handleDelete(transaction.id, transaction.transactionNumber)}
-                          className="text-red-600 hover:text-red-900"
-                          title="Eliminar transacción"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      )}
+                      <div className="flex items-center justify-end space-x-2">
+                        {hasPermission('edit') && (
+                          <button
+                            onClick={() => onEdit(transaction)}
+                            className="text-blue-600 hover:text-blue-900"
+                            title="Editar transacción"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                        )}
+                        {hasPermission('delete') && (
+                          <button
+                            onClick={() => handleDelete(transaction.id, transaction.transactionNumber)}
+                            className="text-red-600 hover:text-red-900"
+                            title="Eliminar transacción"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

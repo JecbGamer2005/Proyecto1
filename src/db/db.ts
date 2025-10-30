@@ -195,6 +195,65 @@ class InventoryDatabase extends Dexie {
     return newTransaction;
   }
 
+  async updateMultiTransaction(id: string, updatedTransaction: Omit<MultiTransaction, 'id' | 'syncStatus'>) {
+    const oldTransaction = await this.multiTransactions.get(id);
+    if (!oldTransaction) throw new Error(`Transaction with id ${id} not found`);
+
+    // Revert stock changes from old transaction
+    for (const item of oldTransaction.items) {
+      const product = await this.products.get(item.productId);
+      if (product) {
+        const revertedStock = oldTransaction.type === 'entry'
+          ? product.currentStock - item.quantity
+          : product.currentStock + item.quantity;
+
+        await this.updateProduct(product.id, { currentStock: revertedStock });
+      }
+    }
+
+    // Apply new transaction
+    const transaction: MultiTransaction = {
+      ...updatedTransaction,
+      id,
+      syncStatus: SyncStatus.PendingSync
+    };
+
+    await this.multiTransactions.put(transaction);
+
+    // Update product stocks for new items
+    for (const item of updatedTransaction.items) {
+      const product = await this.products.get(item.productId);
+      if (product) {
+        const newStock = updatedTransaction.type === 'entry'
+          ? product.currentStock + item.quantity
+          : product.currentStock - item.quantity;
+
+        const updateData: Partial<Product> = { currentStock: newStock };
+
+        if (updatedTransaction.type === 'entry' || updatedTransaction.type === 'exit') {
+          const purchasePrice = item.unitPrice;
+          let sellingPrice = item.unitPrice;
+
+          if (updatedTransaction.type === 'entry') {
+            sellingPrice = purchasePrice * 1.3;
+          }
+
+          if (updatedTransaction.type === 'exit' && item.purchasePrice !== undefined) {
+            updateData.purchasePrice = item.purchasePrice;
+            updateData.sellingPrice = item.unitPrice;
+          } else if (updatedTransaction.type === 'entry') {
+            updateData.purchasePrice = purchasePrice;
+            updateData.sellingPrice = sellingPrice;
+          }
+        }
+
+        await this.updateProduct(product.id, updateData);
+      }
+    }
+
+    return transaction;
+  }
+
   async deleteMultiTransaction(id: string) {
     const transaction = await this.multiTransactions.get(id);
     if (!transaction) return;
@@ -206,7 +265,7 @@ class InventoryDatabase extends Dexie {
         const revertedStock = transaction.type === 'entry'
           ? product.currentStock - item.quantity
           : product.currentStock + item.quantity;
-        
+
         await this.updateProduct(product.id, { currentStock: revertedStock });
       }
     }

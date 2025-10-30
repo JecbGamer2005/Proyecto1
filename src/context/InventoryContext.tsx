@@ -24,6 +24,7 @@ interface InventoryContextType {
   deleteProduct: (id: string) => Promise<void>;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'syncStatus'>) => Promise<Transaction>;
   addMultiTransaction: (transaction: Omit<MultiTransaction, 'id' | 'transactionNumber' | 'syncStatus'>) => Promise<MultiTransaction>;
+  updateMultiTransaction: (id: string, transaction: Omit<MultiTransaction, 'id' | 'transactionNumber' | 'syncStatus'>) => Promise<MultiTransaction>;
   deleteMultiTransaction: (id: string) => Promise<void>;
   getProductById: (id: string) => Product | undefined;
   getCategoryById: (id: string) => Category | undefined;
@@ -116,6 +117,19 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     // Attempt to sync if we're online
     syncData();
     return newTransaction;
+  };
+
+  const updateMultiTransaction = async (id: string, transaction: Omit<MultiTransaction, 'id' | 'transactionNumber' | 'syncStatus'>) => {
+    const existingTransaction = await db.multiTransactions.get(id);
+    if (!existingTransaction) throw new Error('Transaction not found');
+
+    const updatedTransaction = await db.updateMultiTransaction(id, {
+      ...transaction,
+      transactionNumber: existingTransaction.transactionNumber
+    });
+
+    syncData();
+    return updatedTransaction;
   };
 
   const deleteMultiTransaction = async (id: string) => {
@@ -219,6 +233,7 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     deleteProduct,
     addTransaction,
     addMultiTransaction,
+    updateMultiTransaction,
     deleteMultiTransaction,
     getProductById,
     getCategoryById,
