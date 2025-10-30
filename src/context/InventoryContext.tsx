@@ -1,13 +1,12 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
-import { 
-  Product, 
-  Transaction, 
+import {
+  Product,
+  Transaction,
   MultiTransaction,
-  Category, 
-  Brand, 
-  ProductType 
+  Category,
+  Brand
 } from '../types';
 import { useNetwork } from './NetworkContext';
 
@@ -17,7 +16,6 @@ interface InventoryContextType {
   multiTransactions: MultiTransaction[];
   categories: Category[];
   brands: Brand[];
-  productTypes: ProductType[];
   loading: boolean;
   addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt' | 'syncStatus'>) => Promise<Product>;
   updateProduct: (id: string, product: Partial<Product>) => Promise<Product>;
@@ -29,7 +27,6 @@ interface InventoryContextType {
   getProductById: (id: string) => Product | undefined;
   getCategoryById: (id: string) => Category | undefined;
   getBrandById: (id: string) => Brand | undefined;
-  getProductTypeById: (id: string) => ProductType | undefined;
   getProductsExpiringWithinDays: (days: number) => Product[];
   getProductsBelowStock: () => Product[];
   searchProducts: (query: string) => Promise<Product[]>;
@@ -64,7 +61,6 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   const multiTransactions = useLiveQuery(() => db.multiTransactions?.toArray(), [], []) || [];
   const categories = useLiveQuery(() => db.categories?.toArray(), [], []) || [];
   const brands = useLiveQuery(() => db.brands?.toArray(), [], []) || [];
-  const productTypes = useLiveQuery(() => db.productTypes?.toArray(), [], []) || [];
   
   // For pending sync count
   const pendingSyncItems = useLiveQuery(async () => {
@@ -150,10 +146,6 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     return brands.find(brand => brand.id === id);
   };
 
-  const getProductTypeById = (id: string) => {
-    return productTypes.find(type => type.id === id);
-  };
-
   const getProductsExpiringWithinDays = (days: number) => {
     const today = new Date();
     const futureDate = new Date();
@@ -174,10 +166,9 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     return await db.searchProducts(query);
   };
 
-  const filterProducts = (filters: { 
-    categories?: string[]; 
-    brands?: string[]; 
-    types?: string[];
+  const filterProducts = (filters: {
+    categories?: string[];
+    brands?: string[];
     stockLevel?: 'all' | 'low' | 'normal' | 'high';
     expirationStatus?: 'all' | 'expiring-soon' | 'good';
   }) => {
@@ -190,11 +181,6 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
       // Filter by brands
       if (filters.brands && filters.brands.length > 0) {
         if (!filters.brands.includes(product.brand)) return false;
-      }
-
-      // Filter by types
-      if (filters.types && filters.types.length > 0) {
-        if (!filters.types.includes(product.type)) return false;
       }
 
       // Filter by stock level
@@ -226,7 +212,6 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     multiTransactions,
     categories,
     brands,
-    productTypes,
     loading,
     addProduct,
     updateProduct,
@@ -238,7 +223,6 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     getProductById,
     getCategoryById,
     getBrandById,
-    getProductTypeById,
     getProductsExpiringWithinDays,
     getProductsBelowStock,
     searchProducts,
