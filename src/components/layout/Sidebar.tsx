@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { X, LayoutDashboard, Package, ClipboardList, Settings, WifiOff, AlertTriangle } from 'lucide-react';
+import { X, LayoutDashboard, Package, ClipboardList, FileText, Settings, WifiOff, AlertTriangle } from 'lucide-react';
 import { useNetwork } from '../../context/NetworkContext';
 import { useInventory } from '../../context/InventoryContext';
 
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Inventario', path: '/inventory', icon: <Package size={20} /> },
     { name: 'Transacciones', path: '/transactions', icon: <ClipboardList size={20} /> },
+    { name: 'Reportes', path: '/reports', icon: <FileText size={20} /> },
     { name: 'Configuración', path: '/settings', icon: <Settings size={20} /> },
   ];
   

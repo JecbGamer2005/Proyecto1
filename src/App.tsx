@@ -9,6 +9,7 @@ import LoginPage from './components/auth/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Transactions from './pages/Transactions';
+import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import OfflineBanner from './components/common/OfflineBanner';
 import InstallPrompt from './components/common/InstallPrompt';
@@ -41,6 +42,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/transactions" element={<Transactions />} />
+        <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
