@@ -7,30 +7,26 @@ interface MultiTransactionFormProps {
   products: Product[];
   onSubmit: (transaction: Omit<MultiTransaction, 'id' | 'transactionNumber' | 'syncStatus'>) => void;
   onCancel: () => void;
-  initialTransaction?: MultiTransaction;
 }
 
 const MultiTransactionForm: React.FC<MultiTransactionFormProps> = ({
   products,
   onSubmit,
-  onCancel,
-  initialTransaction
+  onCancel
 }) => {
   const { formatCurrency, settings } = useSettings();
   const [formData, setFormData] = useState({
-    type: (initialTransaction?.type || 'exit') as 'entry' | 'exit',
-    date: initialTransaction?.date || new Date().toISOString().split('T')[0],
-    notes: initialTransaction?.notes || '',
-    createdBy: initialTransaction?.createdBy || 'Admin',
-    buyerName: initialTransaction?.buyerName || '',
-    supplierName: initialTransaction?.supplierName || ''
+    type: 'exit' as 'entry' | 'exit',
+    date: new Date().toISOString().split('T')[0],
+    notes: '',
+    createdBy: 'Admin',
+    buyerName: '',
+    supplierName: ''
   });
 
-  const [items, setItems] = useState<TransactionItem[]>(
-    initialTransaction?.items || [
-      { productId: '', quantity: 1, unitPrice: 0, totalPrice: 0 }
-    ]
-  );
+  const [items, setItems] = useState<TransactionItem[]>([
+    { productId: '', quantity: 1, unitPrice: 0, totalPrice: 0 }
+  ]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -220,9 +216,7 @@ const MultiTransactionForm: React.FC<MultiTransactionFormProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {initialTransaction ? 'Editar Transacción' : 'Nueva Transacción'}
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800">Nueva Transacción</h2>
         <button onClick={onCancel} className="text-gray-500 hover:text-gray-700">
           <X size={24} />
         </button>
