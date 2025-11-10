@@ -4,6 +4,7 @@ import { useInventory } from '../context/InventoryContext';
 import { Database, WifiOff, RefreshCw, Download, HardDrive, Upload, Book } from 'lucide-react';
 import CurrencySettings from '../components/settings/CurrencySettings';
 import UserManual from '../components/settings/UserManual';
+import UserManagement from '../components/settings/UserManagement';
 import { useAuth } from '../context/AuthContext';
 
 const Settings: React.FC = () => {
@@ -109,7 +110,12 @@ const Settings: React.FC = () => {
             <UserManual />
           </div>
         )}
-        
+
+        {/* User Management */}
+        <div className="mb-6">
+          <UserManagement />
+        </div>
+
         {/* Currency Settings */}
         {hasPermission('edit') && (
           <div className="mb-6">
