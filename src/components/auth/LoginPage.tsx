@@ -127,11 +127,11 @@ const LoginPage: React.FC = () => {
           </form>
 
           <div className="mt-6 bg-gray-50 rounded-md p-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Credenciales de acceso:</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">Usuarios del sistema:</h3>
             <div className="text-xs text-gray-600 space-y-1 mb-3">
-              <div><strong>Email:</strong> admin@test.com</div>
-              <div><strong>Contraseña:</strong> Test123</div>
-              <div className="text-gray-500 italic mt-2">Rol: Administrador (todos los permisos)</div>
+              <div><strong>admin</strong> - Administrador (todos los permisos)</div>
+              <div><strong>empleado</strong> - Empleado (solo consultar y agregar)</div>
+              <div className="text-gray-500 italic">Contraseña para ambos: paradero</div>
             </div>
             
             <h3 className="text-sm font-medium text-gray-900 mb-2">Características del sistema:</h3>
